@@ -1,0 +1,135 @@
+# Portuguese (Brazil) translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-11-05 22:04-0300\n"
+"PO-Revision-Date: 2024-10-14 22:53-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: pt_BR\n"
+"Language-Team: pt_BR <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app/chat_htmlv2i18.py:100
+msgid "urlcontentqa"
+msgstr "Pergunte ao conteudo"
+
+#: app/chat_htmlv2i18.py:103
+msgid "enterurl"
+msgstr "Digite a URL:"
+
+#: app/chat_htmlv2i18.py:107
+msgid "fetchurlcontent"
+msgstr "Obtendo conteudo da URL..."
+
+#: app/chat_htmlv2i18.py:134
+msgid "failedretrievecontent"
+msgstr "Falha ao baixar conteudo."
+
+#: app/chat_htmlv2i18.py:139
+msgid "talk_about_faq"
+msgstr "Pergunte sobre o seu documento aqui"
+
+#: app/chat_htmlv2i18.py:148
+msgid "failedsummarizecontent"
+msgstr "Falhou em resumir o conteudo."
+
+#: app/chat_htmlv2i18.py:150
+msgid "contentsummarized"
+msgstr "Conteudo resumido!"
+
+#: app/chat_htmlv2i18.py:157
+msgid "clearhistory"
+msgstr "Limpando historico"
+
+#: app/chat_htmlv2i18.py:160
+msgid "processingquestion"
+msgstr "Processando sua pergunta..."
+
+#: app/chat_htmlv2i18.py:166
+msgid "answer"
+msgstr "Resposta:"
+
+#: app/chat_htmlv2i18.py:168
+msgid "failedgetanswer"
+msgstr "Falhou em obter uma resposta."
+
+#: app/chat_htmlv2i18.py:175
+msgid "HTMLChatBot"
+msgstr "HTML Chat Bot"
+
+#: app/chat_htmlv2i18.py:176
+msgid "askdocument"
+msgstr "Pergunte ao documento"
+
+#: app/chat_htmlv2i18.py:178
+msgid "configureprovidermodel"
+msgstr "configure provedor e modelo"
+
+#: app/sidebari18.py:67
+msgid "ai_provider"
+msgstr "Provedor IA"
+
+#: app/sidebari18.py:70
+msgid "help_select_model"
+msgstr ""
+"Selecione o provedor de modelo de IA. Isto vai determinar os modelos "
+"disponíveis."
+
+#: app/sidebari18.py:74
+msgid "how_to_use"
+msgstr ""
+"## como usar\n"
+"Insira sua [OpenAI API key](https://platform.openai.com/account/api-keys)"
+" abaixo\n"
+
+#: app/sidebari18.py:81
+msgid "get_openai_key"
+msgstr "Você podera obtersua chave de API aqui:"
+
+#: app/sidebari18.py:82
+msgid "input_key"
+msgstr "Insira sua chave openAI"
+
+#: app/sidebari18.py:86
+msgid "paste_openai_key"
+msgstr "cole sua chave de API aqui (sk-...)"
+
+#: app/sidebari18.py:94
+msgid "configure_openai_key_error"
+msgstr "Configure sua chave de API!"
+
+#: app/sidebari18.py:97
+msgid "configure_openai_ok"
+msgstr "Chave de openAI configurado!"
+
+#: app/sidebari18.py:100
+msgid "ai_model"
+msgstr "Modelo de AI"
+
+#: app/sidebari18.py:103
+msgid "openai_latest"
+msgstr "GPT-4o and GPT-4o mini são os últimos modelos da OpenAI"
+
+#: app/sidebari18.py:114
+msgid "ollama_end_point_notfound"
+msgstr "Ollama não encontrado, selecione outro provedor."
+
+#: app/sidebari18.py:122
+msgid "ollama_select_model"
+msgstr "Selecione o modelo que deseja:"
+
+#~ msgid "summarizelargecontent"
+#~ msgstr ""
+#~ "Conteudo grande, fazendo um resumo para"
+#~ " caber no limite de tokens do "
+#~ "modelo"
+

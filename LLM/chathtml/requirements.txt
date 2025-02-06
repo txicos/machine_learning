@@ -1,0 +1,14 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+sentence_transformers
+streamlit
+streamlit-chat
+beautifulsoup4
+langchain
+langchain-openai
+langchain-community
+langchain-ollama
+readabilipy
+chonkie
+autotiktokenizer
+faiss-cpu
+selenium
