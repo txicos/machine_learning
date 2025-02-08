@@ -23,7 +23,8 @@ services:
       command: >
         /bin/sh -c "
           curl -X POST http://ollama:11434/api/pull -d '{\"name\":\"all-minilm:33m-l12-v2-fp16\"}' &&
-          curl -X POST http://ollama:11434/api/pull -d '{\"name\":\"llama3.2\"}'
+          curl -X POST http://ollama:11434/api/pull -d '{\"name\":\"llama3.2\"}' &&
+          curl -X POST http://ollama:11434/api/pull -d '{\"name\":\"granite3.1-dense:2b\"}' 
         "
       depends_on:
         ollama:

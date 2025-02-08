@@ -62,10 +62,10 @@ def sidebar(key, llm_model, lang):
     with st.sidebar:
       
       language = st.sidebar.radio('', ['en_US', 'pt_BR'])
-      if language == 'en_US':
-          lang.idiom = 'inglesa'
+      if language == 'pt_BR':
+          lang.idiom = 'pt_BR'
       else:
-          lang.idiom = 'portuguuesa'
+          lang.idiom = 'en_US'
 
       try:
         logging.debug(language)
@@ -107,7 +107,6 @@ def sidebar(key, llm_model, lang):
             )
 
             if len(open_api_key_input)>0:
-                logging.info(f'Entered API is {open_api_key_input}')
                 key.set_open_api_key(open_api_key_input)
             else:
                 st.error(gxt("configure_openai_key_error")) #"Please configure your Open API key!"
@@ -119,7 +118,9 @@ def sidebar(key, llm_model, lang):
           gxt("ai_model"),#"Select the model you would like to use:",
           ["gpt-4o", "gpt-4o-mini"],
           key="selected_model",
-          help= gxt("openai_latest")#"GPT-4o and GPT-4o mini are OpenAI's latest models"
+          help= gxt("openai_latest")#"GPT-4o and GPT-4o mini"
+          # curl https://api.openai.com/v1/models \
+          # -H "Authorization: Bearer $OPEN_API_KEY"
       )
           
       elif model_provider == "Ollama":

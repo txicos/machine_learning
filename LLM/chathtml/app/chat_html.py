@@ -18,7 +18,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 def get_chat_object(llm_model, api_key=None):
   if llm_model.provider == "OpenAI" and api_key is not None:
-    chat = ChatOpenAI(temperature=0.1, model_name=llm_model.model, openai_api_key=api_key)
+    chat = ChatOpenAI(temperature=0.1, model_name=llm_model.model, openai_api_key=api_key) 
   elif llm_model.provider == "Ollama":
     chat = ChatOllama(temperature=0.1, model=llm_model.model) 
   else: 
@@ -55,13 +55,22 @@ def ask_question_about_content(content_txt, question, chat, lang):
             HumanMessage(content= f"""Baseado apenas no seguinte texto: \n"{content_txt}"\n, 
             providencie uma resposta para uma pergunta que será feita mais adiante, mencionando  
             quais partes do conteúdo do texto você usou para elaborar a sua resposta. Devolva 
-            um texto bem elaborado, mas direto. Não faça divagações. Forneça apenas uma 
-            resposta usando a língua {lang.idiom}. Segue a Pergunta:\n\n{question}""")
+            um texto bem elaborado, mas direto. Não faça divagações. Segue a Pergunta:\n\n{question}""")
         ]
         
 
         response = chat(messages)
         answer = response.content.strip()
+        logging.info(f"Translating: {answer}")
+        messages = [
+            SystemMessage(content= "Você é um tradutor de textos."),
+            HumanMessage(content= f"""Traduza o texto \n"{answer}"\n.
+            para o idioma {lang.idiom}. Se estiver no mesmo idioma, apenas repita o texto.""")
+        ]
+        
+        response = chat(messages)
+        answer = response.content.strip()
+        logging.info(f"Texto final: {answer}")
         return answer
     except Exception as e:
         logging.error(f"Error during question processing: {e}")
@@ -97,14 +106,11 @@ st.set_page_config(
 
 
 logging.getLogger().setLevel(logging.INFO)
-
+raw_content = ''
 # these containers appear in the order they are declared
 urlcontainer = st.container()
 #container for the user's text input
 usercontainer = st.container()
-
-
-raw_content = ''
 
 def app():
     global raw_content
@@ -145,8 +151,6 @@ def app():
                 logging.info("Ready for questions")
                 with st.form(key='my_form', clear_on_submit=True):
                   
-                    max_tokens = 100000  # Adjust based on model's context length
-                    raw_content_length = len(raw_content) / 4  # Approximate token count
                     talk_about_faq = get_i18("talk_about_faq")
                     #"Talk about your faq here (:"
                     user_input = st.text_input("Query:", placeholder=talk_about_faq, key='input')
@@ -163,29 +167,23 @@ def app():
                               st.error(get_i18('failedsummarizecontent')) #Failed to summarize content.
                           else:
                               st.success(get_i18('contentsummarized')) # Content
-                                          
                     
-                    submit_button = st.form_submit_button(label='Send')
-                    
-                col1, col2 = st.columns([1, 3.2])
-                reset_button = col1.button(get_i18("clearhistory")) #Clear Chat History
-                    
-                if submit_button and user_input:
-                      with st.spinner(get_i18('processingquestion')): #Processing your question...
-                        logging.info(f"new question received {user_input} sobre conteudo {len(content)}")
-                        logging.debug(f"{content}")
-                        if summarize:
-                           answer = summarize_content(content, chat, lang)
-                        else:
-                          answer = ask_question_about_content(content, user_input, chat, lang)
-                        logging.info(f"answer {answer} received ")
-                      if answer:
-                        st.write(user_input)
-                        st.write(get_i18('answer'), answer) #Answer:
-                      else:
-                        st.error(get_i18('failedgetanswer')) #Failed to get an answer.
-                    
-                if reset_button:
+                    if st.form_submit_button(label='Send') and user_input:
+                          with st.spinner(get_i18('processingquestion')): #Processing your question...
+                            logging.info(f"new question received {user_input} sobre conteudo {len(content)} idioma {lang.idiom}")
+                            logging.debug(f"{content}")
+                            if summarize:
+                                answer = summarize_content(content, chat, lang)
+                            else:
+                              answer = ask_question_about_content(content, user_input, chat, lang)
+                            logging.info(f"answer {answer} received ")
+                          if answer:
+                            st.write(user_input)
+                            st.write(get_i18('answer'), answer) #Answer:
+                          else:
+                            st.error(get_i18('failedgetanswer')) #Failed to get an answer.
+                col1, _ = st.columns([1, 3.2])  
+                if col1.button(get_i18("clearhistory")):
                               
                     st.rerun()
                     chat = None
