@@ -18,7 +18,7 @@ import streamlit as st
 
 from time import sleep
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def get_text_from_url(url):
     """
     Fetches and extracts text content from a given URL.

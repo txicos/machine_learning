@@ -23,7 +23,6 @@ def get_chat_object(llm_model, api_key=None):
     chat = ChatOllama(temperature=0.1, model=llm_model.model) 
   else: 
     chat = None
-  logging.info(f"chat object {chat}")
   return chat
 
 def summarize_content(content, chat, lang):
@@ -99,6 +98,7 @@ def user_intent(question, chat):
         logging.error(f"Error during question processing: {e}")
         return False
 
+
 st.set_page_config(
     layout="centered",
     initial_sidebar_state="auto",
@@ -113,6 +113,14 @@ urlcontainer = st.container()
 usercontainer = st.container()
 
 def app():
+    
+    if 'chat' not in st.session_state:
+      st.session_state.chat = None
+
+    if 'url' not in st.session_state:
+      st.session_state.url = None
+
+
     global raw_content
     key = Key()
     
@@ -120,33 +128,31 @@ def app():
 
     lang = Language()
     
-    sidebar(key,llm_model,lang)
-
-    logging.info(f"{llm_model.provider}  {llm_model.model}  {key.get_open_api_key()}")
+    sidebar(key, llm_model, lang)
+    #logging.info(f"{llm_model.provider}  {llm_model.model}")
 
     if llm_model.provider is not None and llm_model.model is not None:
       
-      chat = get_chat_object(llm_model, key.get_open_api_key())
+      st.session_state.chat = get_chat_object(llm_model, key.get_open_api_key())
       
-      if chat is not None:
+      if st.session_state.chat is not None:
       
         with urlcontainer:
           
           st.title(get_i18("urlcontentqa")) #URL Content Q&A
 
           # Input for URL
-          url = st.text_input(get_i18('enterurl')) #Enter the URL:
-          logging.info(f"URL: {url}")
-          logging.info(f"len(raw_content): {len(raw_content)}")
-          if url and len(raw_content) == 0:  # Check if URL is provided
+          st.session_state.url = st.text_input(get_i18('enterurl')) #Enter the URL:
+          logging.info(f"URL: {st.session_state.url}")
+          if st.session_state.url and len(raw_content) == 0:  # Check if URL is provided
             
             with st.spinner(get_i18('fetchurlcontent')): #Fetching content from the URL...
-                raw_content = get_text_from_url(url)
+                raw_content = get_text_from_url(st.session_state.url)
                 logging.debug(f"{raw_content}")
                 if len(raw_content) == 0:
                   st.error(get_i18('failedretrievecontent'))
 
-          if url and len(raw_content) > 0:
+          if st.session_state.url and len(raw_content) > 0:
             with usercontainer:
                 logging.info("Ready for questions")
                 with st.form(key='my_form', clear_on_submit=True):
@@ -159,7 +165,7 @@ def app():
                     
                     if user_input:
 
-                        summarize = user_intent(user_input, chat)
+                        summarize = user_intent(user_input, st.session_state.chat)
                         if (not summarize) and llm_model.provider == 'Ollama':
                           content = perform_rag(raw_content,user_input)
                           
@@ -167,33 +173,39 @@ def app():
                               st.error(get_i18('failedsummarizecontent')) #Failed to summarize content.
                           else:
                               st.success(get_i18('contentsummarized')) # Content
-                    
-                    if st.form_submit_button(label='Send') and user_input:
-                          with st.spinner(get_i18('processingquestion')): #Processing your question...
-                            logging.info(f"new question received {user_input} sobre conteudo {len(content)} idioma {lang.idiom}")
-                            logging.debug(f"{content}")
-                            if summarize:
-                                answer = summarize_content(content, chat, lang)
-                            else:
-                              answer = ask_question_about_content(content, user_input, chat, lang)
-                            logging.info(f"answer {answer} received ")
-                          if answer:
-                            st.write(user_input)
-                            st.write(get_i18('answer'), answer) #Answer:
-                          else:
-                            st.error(get_i18('failedgetanswer')) #Failed to get an answer.
-                col1, _ = st.columns([1, 3.2])  
+
+                    submited = st.form_submit_button(label='Send')
+                    if submited and user_input:
+                      
+                      with st.spinner(get_i18('processingquestion')): #Processing your question...
+                        logging.info(f"new question received {user_input} sobre conteudo {len(content)} idioma {lang.idiom}")
+                        #logging.debug(f"{content}")
+                        if summarize:
+                            answer = summarize_content(content, st.session_state.chat, lang)
+                        else:
+                          answer = ask_question_about_content(content, user_input, st.session_state.chat, lang)
+                        logging.info(f"answer {answer} received ")
+                      if answer:
+                        st.write(user_input)
+                        st.write(get_i18('answer'), answer) #Answer:
+                      else:
+                        st.error(get_i18('failedgetanswer')) #Failed to get an answer.
+
+
+                col1, _ = st.columns([1, 3.2])
                 if col1.button(get_i18("clearhistory")):
                               
                     st.rerun()
-                    chat = None
+                    st.session_state.chat = None
                     raw_content = ''
+
       else:
         st.title(get_i18("HTMLChatBot"))
         st.subheader(get_i18("askdocument"))        
 
         st.error(get_i18("configureprovidermodel")) #Please configure provider and model
         #raw_content = ''
+
 
                             
 
